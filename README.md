@@ -68,3 +68,9 @@ docker exec -it laravel_php /bin/bash
 # run migration
 php artisan migrate
 ```
+
+### 6 After success install run
+
+```bash
+npm install && npm run dev
+```
