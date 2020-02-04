@@ -11,6 +11,5 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'NewsController@index')->name('home');
+Route::resource('news', 'NewsController')->only('show');
