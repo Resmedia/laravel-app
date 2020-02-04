@@ -1,0 +1,83 @@
+version: '3'
+services:
+
+#MySQL Service
+  mysql:
+    image: mysql:5.7.22
+    container_name: laravel_db
+    restart: unless-stopped
+    tty: true
+    volumes:
+        - mysql_volume:/var/lib/mysql:cached
+        - ./mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: toor
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - default
+#PHP Service
+  app:
+    image: php
+    container_name: laravel_app
+    restart: unless-stopped
+    tty: true
+    volumes:
+        - ./laravel/:/var/www
+        - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    networks:
+      - default
+
+#PHPMYADMIN
+  phpmyadmin:
+    container_name: laravel_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    networks:
+      - default
+    environment:
+      TZ: "Europe/Moscow"
+      PMA_HOST: mysql
+    links:
+      - mysql
+    expose:
+      - 80
+
+#Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: laravel_nginx
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./laravel:/var/www/
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./logs:/logs:cached
+    links:
+      - app
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - default
+
+volumes:
+  mysql_volume: {}
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.31.0.0/16
