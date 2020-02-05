@@ -11,5 +11,6 @@
 |
 */
 
-Route::get('/', 'NewsController@index')->name('home');
-Route::resource('news', 'NewsController')->only('show');
+Route::get('/', 'MainController@index');
+Route::resource('news', 'NewsController')->only('index');
+Route::get('news/{id}', 'NewsController@show');

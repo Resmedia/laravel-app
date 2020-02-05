@@ -3,14 +3,16 @@
         <a href="/" class="navbar-brand">
             Laravel Resmedia
         </a>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            Пользователь
-                            <div class="dropdown-divider"></div>
-                        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                @foreach(\App\Models\Menu::all() as $menu)
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{$menu->url}}">{{$menu->name}}</a>
                     </li>
+                @endforeach
             </ul>
         </div>
     </div>
