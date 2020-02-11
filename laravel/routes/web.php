@@ -13,4 +13,5 @@
 
 Route::get('/', 'MainController@index');
 Route::resource('news', 'NewsController')->only('index');
+Route::get('news/category/{id}', 'NewsController@index');
 Route::get('news/{id}', 'NewsController@show');

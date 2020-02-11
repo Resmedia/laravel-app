@@ -25,6 +25,7 @@ class News extends Model
         'posted_at',
         'slug',
         'thumbnail_id',
+        'category_id',
     ];
 
     /**
@@ -35,6 +36,11 @@ class News extends Model
     protected $dates = [
         'posted_at'
     ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 
     /**
      * Get the route key for the model.

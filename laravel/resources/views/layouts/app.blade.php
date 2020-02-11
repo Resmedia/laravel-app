@@ -16,16 +16,17 @@
 <body class="bg-light">
     <div id="app">
         @include('shared/navbar')
-
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    @yield('content')
+        <div class="wrap">
+            <main class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        @yield('content')
+                    </div>
                 </div>
-            </div>
-        </div>
+            </main>
 
-        @include('shared/footer')
+            @include('shared/footer')
+        </div>
     </div>
 
     <!-- Scripts -->

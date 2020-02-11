@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dark bg-dark position-absolute footer-container col-12">
+<footer class="bg-dark footer-container">
     <div class="container justify-content-center">
         <ul class="navbar-nav text-center">
             <li class="nav-item text-white m-3">
@@ -10,4 +10,4 @@
             </li>
         </ul>
     </div>
-</nav>
+</footer>

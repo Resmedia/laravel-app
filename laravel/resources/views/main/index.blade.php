@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div style="padding: 40vh 30px;">
+    <section id="main">
         <h1>Hello</h1>
-    </div>
+    </section>
 @endsection
