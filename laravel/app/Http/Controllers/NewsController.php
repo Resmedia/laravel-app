@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\News;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\View\View;
 
 class NewsController extends Controller
@@ -22,6 +21,8 @@ class NewsController extends Controller
 
         $categories = Category::all();
 
+        $category = $id ? Category::findOrFail($id) : null;
+
         if ($id && $request->is('news/category/'. $id)) {
             $news = News::where(['category_id' => $id])
                 ->latest()
@@ -30,6 +31,7 @@ class NewsController extends Controller
 
         return view('news.index', [
             'news' => $news,
+            'category' => $category,
             'categories' => $categories
         ]);
     }
