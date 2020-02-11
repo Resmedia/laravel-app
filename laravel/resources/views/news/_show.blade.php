@@ -9,6 +9,11 @@
             </small>
         </p>
         <p class="card-text">
+            <small class="text-muted">
+                <a href="{{ url("/news/category/{$news->category->id}")}}"> {{ $news->category->name }}</a>
+            </small>
+        </p>
+        <p class="card-text">
             <small class="text-muted">{{ App\Helpers\Helper::humanize_date($news->posted_at) }}</small>
             <br>
         </p>
