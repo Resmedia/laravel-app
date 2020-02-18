@@ -20,7 +20,11 @@ Route::group(
     ], function () {
     Route::get('/', 'Admin\IndexController@index');
     Route::resource('/news', 'Admin\NewsController')->only('index');
-    Route::get('/news/update/{id}', 'Admin\NewsController@update');
+    Route::resource('/news/store', 'Admin\NewsController');
+    Route::resource('/news/update', 'Admin\NewsController')->only('update');
+    Route::get('/news/delete/{id}', 'Admin\NewsController@deleteItem');
+    Route::get('/news/create', 'Admin\NewsController@create');
+    Route::get('/news/edit/{id}', 'Admin\NewsController@edit');
 });
 
 Route::group(
