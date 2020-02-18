@@ -11,6 +11,6 @@ class NewsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Models\News', 30)->create();
+        factory('App\News', 30)->create();
     }
 }

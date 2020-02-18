@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\News;
+use App\Category;
+use App\News;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 

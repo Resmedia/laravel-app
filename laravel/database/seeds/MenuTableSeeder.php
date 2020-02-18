@@ -23,5 +23,11 @@ class MenuTableSeeder extends Seeder
             'url' => 'about',
             'parent_id' => 0,
         ]);
+
+        DB::table('menus')->insert([
+            'name' => 'Панель управления',
+            'url' => 'admin',
+            'parent_id' => 0,
+        ]);
     }
 }
