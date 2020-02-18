@@ -8,7 +8,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
-                @foreach(\App\Models\Menu::all() as $menu)
+                @foreach(\App\Menu::all() as $menu)
                     <li class="nav-item active">
                         <a class="nav-link" href="/{{$menu->url}}">{{$menu->name}}</a>
                     </li>

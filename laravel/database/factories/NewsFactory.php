@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\News;
-use App\Models\User;
+use App\News;
+use App\User;
 use Faker\Generator;
 
 $factory->define(News::class, function (Generator $faker) {

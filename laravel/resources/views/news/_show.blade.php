@@ -1,4 +1,4 @@
-<?php /** @var $news \App\Models\News */ ?>
+<?php /** @var $news \App\Models\News */?>
 <div class="card">
     <div class="card-body">
         <h4 class="card-title"><a href="{{ url("/news/{$news->id}")}}">{{$news->title}}</a> </h4>

@@ -1,4 +1,8 @@
 @extends('layouts.app')
+@include('meta::manager', [
+     'title'         => $news->title,
+     'description'   => 'Новости, ' . $news->title,
+])
 
 @section('content')
   <div class="post-card h-100 col-12 d-inline-block">
