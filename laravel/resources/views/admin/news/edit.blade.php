@@ -24,9 +24,17 @@
                 </div>
                 <br/>
             @endif
-            <form method="post" action='{{ url("/admin/news/update/$news->id") }}'>
+            <form method="post" action='{{ url("/admin/news/update/$news->id") }}' enctype="multipart/form-data">
                 @method('PATCH')
                 @csrf
+
+                <?php foreach (Storage::files("public/uploads/news/$news->id") as $image) : ?>
+                <img width="100px" src="/<?= $image ?>">
+                <div onclick="deleteImage('<?= $image ?>')" >Удалить</div>
+                <?php endforeach; ?>
+
+                <?= Form::file('file') ?>
+
                 <div class="form-group">
                     <?= Form::label('title', 'Название новости'); ?>
                     <?= Form::text('title', $news->title, ['class' => 'form-control']); ?>
@@ -50,3 +58,13 @@
         </div>
     </div>
 @endsection
+
+<script>
+    deleteImage = $url => {
+        $.ajax({
+            method: 'GET',
+            data: $url,
+            url: '/admin/news/delete-image'
+        })
+    }
+</script>

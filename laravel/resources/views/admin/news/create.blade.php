@@ -24,11 +24,10 @@
                 </div>
                 <br />
             @endif
-            <form method="post" action="{{ url('/admin/news/store') }}">
+            <form method="post" action="{{ url('/admin/news/store') }}" multiple>
                 @method('POST')
                 @csrf
-                @method('POST')
-                @csrf
+                <input type="file" name="file">
                 <div class="form-group">
                     <?= Form::label('title', 'Название новости'); ?>
                     <?= Form::text('title', null, ['class' => 'form-control']); ?>
