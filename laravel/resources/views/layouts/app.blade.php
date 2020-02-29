@@ -12,6 +12,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
+    <script src="/js/jquery.js"></script>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 

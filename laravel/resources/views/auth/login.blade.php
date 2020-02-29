@@ -5,7 +5,15 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Форма авторизации</div>
+                <div class="card-header">
+                    Форма авторизации
+                    <br>
+                    <small class="text-muted">
+                        Если пользователи созданы через seeds то пароль для любого 'password'
+                        <br>
+                        Или пройдите <a href="/register">регистрацию</a>
+                    </small>
+                </div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">

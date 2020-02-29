@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class NewsController extends Controller
@@ -34,7 +35,11 @@ class NewsController extends Controller
         $news->posted_at = date('Y-m-d H:i:s');
         $news->updated_at = date('Y-m-d H:i:s');
         $news->created_at = date('Y-m-d H:i:s');
-        $news->save();
+        if($news->save()){
+            if($request->hasFile('file')) {
+                $request->file('file')->store('news/' . $news->id);
+            }
+        };
 
         return redirect('/admin/news')->with('success', 'Новость успешно сохранена');
     }
@@ -74,6 +79,7 @@ class NewsController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'title' => 'required',
             'slug' =>  'required',
@@ -88,9 +94,31 @@ class NewsController extends Controller
         $news->category_id = $request->get('category_id');
         $news->content = $request->get('content');
         $news->updated_at = date('Y-m-d H:i:s');
-        $news->save();
+        if($news->save()){
+            if($request->hasFile('file')) {
+                $request->file('file')->store('news/' . $news->id);
+                return redirect('admin/news/edit/' . $news->id)->with('success', 'Фото добавлено!');
+            }
+        };
 
         return redirect('/admin/news')->with('success', 'Новость обновлена!');
+    }
+
+    public function deleteImage(Request $request)
+    {
+        if($request->get('url')) {
+            if(Storage::delete($request->get('url'))){
+                return json_encode([
+                    'status' => 200,
+                    'message' => 'Фото успешно удалено!'
+                ]);
+            }
+        }
+
+        return json_encode([
+            'status' => 500,
+            'message' => 'Нет url фото'
+        ]);
     }
 
     public function deleteItem($id = null)

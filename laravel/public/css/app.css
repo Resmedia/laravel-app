@@ -10904,6 +10904,12 @@ body {
   min-height: 100%;
 }
 
+.carousel {
+  position: relative;
+  width: 70%;
+  margin: 0 auto;
+}
+
 main {
   padding-top: 100px;
   flex: 1 0 auto;
