@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class NewsController extends Controller
@@ -14,6 +15,7 @@ class NewsController extends Controller
      */
     public function index(Request $request, $id = null): View
     {
+        $images = [];
 
         $news = News::search($request->input('q'))
             ->latest()
@@ -31,6 +33,7 @@ class NewsController extends Controller
 
         return view('news.index', [
             'news' => $news,
+            'images' => $images,
             'category' => $category,
             'categories' => $categories
         ]);
@@ -41,6 +44,10 @@ class NewsController extends Controller
      */
     public function show($id)
     {
-        return view('news.show', ['news' => News::findOrFail($id)]);
+        $images = Storage::files("/news/$id") ?: null;
+        return view('news.show', [
+            'images' => $images,
+            'news' => News::findOrFail($id)]
+        );
     }
 }

@@ -74,3 +74,8 @@ php artisan migrate
 ```bash
 npm install && npm run dev
 ```
+
+### 8 for view images run in /laravel folder 
+```bash
+sudo ln -s "$(pwd)/storage/app" public/uploads
+```

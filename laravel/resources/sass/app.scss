@@ -12,6 +12,7 @@
 html, body {
   height: 100%;
 }
+
 #app {
   height: 100%;
 }
@@ -19,6 +20,11 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+}
+.carousel {
+  position: relative;
+  width: 70%;
+  margin: 0 auto;
 }
 main {
   padding-top: 100px;

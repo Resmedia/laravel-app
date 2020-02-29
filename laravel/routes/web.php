@@ -25,7 +25,7 @@ Route::group(
     Route::get('/news/delete/{id}', 'Admin\NewsController@deleteItem');
     Route::get('/news/create', 'Admin\NewsController@create');
     Route::get('/news/edit/{id}', 'Admin\NewsController@edit');
-    Route::get('/news/delete-image', 'Admin\NewsController@deleteImage');
+    Route::delete('/news/delete-image', 'Admin\NewsController@deleteImage');
 });
 
 Route::group(

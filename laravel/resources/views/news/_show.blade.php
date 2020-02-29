@@ -1,23 +1,25 @@
 <?php /** @var $news \App\News */?>
 <div class="card">
+    @if (!empty(Storage::files("/news/$news->id")))
+        <img alt="image" class="card-img-top" src="/uploads/<?= Storage::files("/news/$news->id")[0] ?>">
+    @endif
     <div class="card-body">
-        <h4 class="card-title"><a href="{{ url("/news/{$news->id}")}}">{{$news->title}}</a> </h4>
-
+        <h5 class="card-title"><a href="{{ url("/news/{$news->id}")}}">{{$news->title}}</a></h5>
         <p class="card-text">
             <small class="text-muted">
                 {{ !empty($news->author) ? $news->author->name : '' }}
             </small>
-        </p>
-        <p class="card-text">
             @if(!empty($news->category))
-            <small class="text-muted">
-                <a href="{{ url("/news/category/{$news->category->id}")}}"> {{ $news->category->name }}</a>
-            </small>
+                <div class="text-muted">
+                    Категория: <a href="{{ url("/news/category/{$news->category->id}")}}">{{ $news->category->name }}</a>
+                </div>
             @endif
         </p>
-        <p class="card-text">
-            <small class="text-muted">{{ App\Helpers\Helper::humanize_date($news->posted_at) }}</small>
-            <br>
-        </p>
+        <div class="col-12">
+            <div class="row justify-content-between align-items-lg-center">
+                <a class="btn btn-primary" href="{{ url("/news/{$news->id}")}}">Подробнее</a>
+                <small class="text-muted">{{ App\Helpers\Helper::humanize_date($news->posted_at) }}</small>
+            </div>
+        </div>
     </div>
 </div>

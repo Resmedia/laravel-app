@@ -37,19 +37,11 @@ class NewsController extends Controller
         $news->created_at = date('Y-m-d H:i:s');
         if($news->save()){
             if($request->hasFile('file')) {
-                $request->file('file')->store('news/' . $news->id, 'public');
+                $request->file('file')->store('news/' . $news->id);
             }
         };
 
         return redirect('/admin/news')->with('success', 'Новость успешно сохранена');
-    }
-
-    public function deleteImage(Request $request)
-    {
-        if(!$request->url) {
-            return false;
-        }
-        return Storage::delete($request->url);
     }
 
     public function create()
@@ -104,11 +96,29 @@ class NewsController extends Controller
         $news->updated_at = date('Y-m-d H:i:s');
         if($news->save()){
             if($request->hasFile('file')) {
-                $request->file('file')->store('news/' . $news->id, 'public');
+                $request->file('file')->store('news/' . $news->id);
+                return redirect('admin/news/edit/' . $news->id)->with('success', 'Фото добавлено!');
             }
         };
 
         return redirect('/admin/news')->with('success', 'Новость обновлена!');
+    }
+
+    public function deleteImage(Request $request)
+    {
+        if($request->get('url')) {
+            if(Storage::delete($request->get('url'))){
+                return json_encode([
+                    'status' => 200,
+                    'message' => 'Фото успешно удалено!'
+                ]);
+            }
+        }
+
+        return json_encode([
+            'status' => 500,
+            'message' => 'Нет url фото'
+        ]);
     }
 
     public function deleteItem($id = null)

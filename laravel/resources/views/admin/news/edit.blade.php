@@ -24,14 +24,21 @@
                 </div>
                 <br/>
             @endif
+
+            <div class="flex-column">
+                <?php foreach (Storage::files("/news/$news->id") as $image) : ?>
+                <div class="align-items-center">
+                    <img width="100px" src="/uploads/<?= $image ?>">
+                    <div class="btn btn-link" onclick="deleteImage('<?= $image ?>')">Удалить</div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+
+            <br/>
+            <br/>
             <form method="post" action='{{ url("/admin/news/update/$news->id") }}' enctype="multipart/form-data">
                 @method('PATCH')
                 @csrf
-
-                <?php foreach (Storage::files("public/uploads/news/$news->id") as $image) : ?>
-                <img width="100px" src="/<?= $image ?>">
-                <div onclick="deleteImage('<?= $image ?>')" >Удалить</div>
-                <?php endforeach; ?>
 
                 <?= Form::file('file') ?>
 
@@ -60,11 +67,21 @@
 @endsection
 
 <script>
-    deleteImage = $url => {
+    deleteImage = url => {
         $.ajax({
-            method: 'GET',
-            data: $url,
+            method: 'DELETE',
+            data: {
+                url: url,
+                "_token": "{{ csrf_token() }}"
+            },
             url: '/admin/news/delete-image'
+        }).then(request => {
+            let data = JSON.parse(request);
+            if(data.status === 200) {
+                location.reload()
+            } else {
+                console.log(data.message);
+            }
         })
     }
 </script>
