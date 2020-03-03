@@ -19,7 +19,7 @@ class UpdateNews extends Migration
             $table->string('name', 255);
         });
         Schema::table('news', function (Blueprint $table) {
-            $table->integer('category_id');
+            $table->integer('category_id')->nullable(true);
         });
 
         DB::insert('insert into `categories` (`name`) values ("Политика"), ("Спорт"), ("Юмор"), ("Экономика"), ("Мир"), ("Строительство")');
