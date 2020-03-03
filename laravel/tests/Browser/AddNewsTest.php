@@ -31,5 +31,7 @@ Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia
                 ->click('.btn.btn-success.float-right')
                 ->waitForText('Новость успешно сохранена');
         });
+
+        $this->assertTrue(true);
     }
 }
