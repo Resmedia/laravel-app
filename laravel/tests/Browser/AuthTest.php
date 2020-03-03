@@ -29,5 +29,7 @@ class AuthTest extends DuskTestCase
                 ->press('Войти')
                 ->waitForLocation('/admin');
         });
+
+        $this->assertTrue(true);
     }
 }
