@@ -15,4 +15,9 @@ class LoginTest extends TestCase
     {
         $this->assertTrue(true);
     }
+
+    public function testViewRegistration()
+    {
+        $this->assertTrue(true);
+    }
 }

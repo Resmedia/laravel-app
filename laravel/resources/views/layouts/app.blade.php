@@ -33,7 +33,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src={{ asset('js/app.js') }}></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"
+            crossorigin="anonymous"
+    ></script>
     @stack('inline-scripts')
 </body>
 </html>

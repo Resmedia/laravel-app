@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class NewsTableSeeder extends Seeder
 {
@@ -12,5 +13,7 @@ class NewsTableSeeder extends Seeder
     public function run()
     {
         factory('App\News', 30)->create();
+
+        DB::update('UPDATE `news` SET `category_id` = FLOOR(RAND()*6)+1');
     }
 }

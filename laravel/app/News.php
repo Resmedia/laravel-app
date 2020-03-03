@@ -106,4 +106,18 @@ class News extends Model
     {
         return Str::limit($this->content, $length);
     }
+
+    public function messages()
+    {
+        return [
+            'title.required' => 'Название обязательно',
+            'content.required'  => 'Контент необходимо заполнить',
+            'category_id.required' => 'Категорию необходимо выбрать',
+            'slug.required' => 'URL обязательно к заполнению',
+            'slug.unique' => 'URL должен быть уникален',
+            'title.unique' => 'Название должно быть уникально',
+            'slug.max' => 'URL не должен превышать 120 знаков',
+            'title.max' => 'Название не должно превышать 120 знаков',
+        ];
+    }
 }

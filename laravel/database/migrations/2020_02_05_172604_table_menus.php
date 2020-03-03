@@ -17,7 +17,7 @@ class TableMenus extends Migration
             $table->increments('id');
             $table->integer('parent_id')->unsigned()->default(0);
             $table->string('name');
-            $table->string('url')->default(null);
+            $table->string('url')->nullable(true);
         });
     }
 

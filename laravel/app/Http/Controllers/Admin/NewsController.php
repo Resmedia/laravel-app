@@ -6,6 +6,7 @@ use App\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class NewsController extends Controller
@@ -13,6 +14,7 @@ class NewsController extends Controller
     public function index(Request $request): View
     {
         $models = News::search($request->input('q'))
+            ->where(['author_id' => Auth::id()])
             ->latest()
             ->paginate(20);
 
@@ -23,18 +25,27 @@ class NewsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'slug' =>  'required',
+        $news = new News($request->all());
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:news|max:255',
+            'slug' =>  'required|unique:news|max:255',
             'category_id' => 'required',
             'content' => 'required',
-        ]);
+        ], $news->messages());
 
-        $news = new News($request->all());
-        $news->author_id = Auth::id();
-        $news->posted_at = date('Y-m-d H:i:s');
-        $news->updated_at = date('Y-m-d H:i:s');
-        $news->created_at = date('Y-m-d H:i:s');
+        if ($validator->fails()) {
+            return redirect('/admin/news/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $news->fill([
+            'author_id' => Auth::id(),
+            'posted_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
         if($news->save()){
             if($request->hasFile('file')) {
                 $request->file('file')->store('news/' . $news->id);
@@ -79,21 +90,29 @@ class NewsController extends Controller
 
     public function update(Request $request, $id)
     {
+        $news = News::find($id);
 
-        $request->validate([
-            'title' => 'required',
-            'slug' =>  'required',
+        $validator = Validator::make($request->all(), [
+            'title' => ($news->title !== $request->get('title')) ? 'required|unique:news|max:120' : 'required|max:120',
+            'slug' => ($news->slug !== $request->get('slug')) ? 'required|unique:news|max:120' : 'required|max:120',
             'category_id' => 'required',
             'content' => 'required',
-        ]);
+        ], $news->messages());
 
-        $news = News::find($id);
-        $news->author_id = Auth::id();
-        $news->title =  $request->get('title');
-        $news->slug = $request->get('slug');
-        $news->category_id = $request->get('category_id');
-        $news->content = $request->get('content');
-        $news->updated_at = date('Y-m-d H:i:s');
+        if ($validator->fails()) {
+            return redirect("/admin/news/edit/$id")
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $news->fill([
+            'author_id' => Auth::id(),
+            'title' => $request->get('title'),
+            'slug' => $request->get('slug'),
+            'category_id' => $request->get('category_id'),
+            'content' => $request->get('content'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
         if($news->save()){
             if($request->hasFile('file')) {
                 $request->file('file')->store('news/' . $news->id);

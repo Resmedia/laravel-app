@@ -17,7 +17,7 @@ class TableNews extends Migration
             $table->increments('id');
             $table->integer('author_id')->unsigned()->default(0);
             $table->string('title');
-            $table->string('slug')->default(null);
+            $table->string('slug')->nullable(true);
             $table->text('content');
             $table->datetime('posted_at');
             $table->timestamps();

@@ -11,6 +11,8 @@
                     <small class="text-muted">
                         Если пользователи созданы через seeds то пароль для любого 'password'
                         <br>
+                        Админ: admin@admin.ru пароль: password
+                        <br>
                         Или пройдите <a href="/register">регистрацию</a>
                     </small>
                 </div>
