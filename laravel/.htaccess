@@ -1,6 +1,6 @@
-RewriteEngine on
-RewriteCond %{REQUEST_URI} !^public
-RewriteRule ^(.*)$ public/$1 [L]
+RewriteEngine On
+RewriteCond %(REQUEST_URI) !^/public
+RewriteRule ^(.*)$ /public/$1 [L]
 
 RewriteCond %{REQUEST_URI} ^/uploads
-RewriteRule ^office(/.+)?$ /public/storage/app/$1 [L,PT]
+RewriteRule ^(.*)$/public/storage/app/$1 [L,PT]
