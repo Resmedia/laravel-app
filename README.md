@@ -14,6 +14,22 @@ PhpMyAdmin | phpmyadmin/phpmyadmin
 
 --------------------------------------------
 
+### RESUME
+
+If you work with Apache on local machine without docker
+
+You need:
+
+PHP 7.3>
+
+MySQL 5.7>
+
+And run
+
+```bash
+cp .env.local .env
+```
+
 ### 1 Go to directory where your sites
 
 RUN
