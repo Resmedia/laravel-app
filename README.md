@@ -42,8 +42,6 @@ cp .env.example .env
 # Look for settings in .env
 composer update
 
-docker build . -f ./laravel/Dockerfile 
-
 docker-compose up     // Start with log
 
 # OR
@@ -67,6 +65,9 @@ docker exec -it laravel_php /bin/bash
 
 # run migration
 php artisan migrate
+
+# if yo need to seed tables
+php artisan db:seed
 ```
 
 ### 7 After success install run
@@ -78,4 +79,11 @@ npm install && npm run dev
 ### 8 for view images run in /laravel folder 
 ```bash
 sudo ln -s "$(pwd)/storage/app" public/uploads
+```
+
+### 9 to make test
+```bash
+php artisan dusk --verbose
+
+./vendor/bin/phpunit # in folder laravel
 ```
