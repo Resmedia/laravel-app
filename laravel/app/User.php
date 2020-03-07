@@ -47,4 +47,19 @@ class User extends Authenticatable
             return $query->where('name', 'LIKE', "%{$search}%");
         }
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'ФИО обязательно',
+            'email.required'  => 'Email необходимо заполнить',
+            'oldPassword.required' => 'Страый пароль обязателен к заполнению',
+            'newPassword.required' => 'Новый пароль обязателен к заполнению',
+            'email.unique' => 'Email должен быть уникален',
+            'title.unique' => 'Название должно быть уникально',
+            'newPassword.min' => 'Пароь минимум 5 знаков',
+            'name.max' => 'ФИО не может быть более 100 знаков',
+            'name.string' => 'ФИО не может содержать цифры',
+        ];
+    }
 }

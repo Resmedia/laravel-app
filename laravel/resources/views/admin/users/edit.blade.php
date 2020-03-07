@@ -41,8 +41,8 @@
                 </div>
 
                 <div class="form-group">
-                    <?= Form::label('rule', 'Права'); ?>
-                    <?= Form::select('rule', $rules, $user->rule, ['class' => 'form-control']); ?>
+                    <?= Form::label('rules', 'Права'); ?>
+                    <?= Form::select('rules', $rules, $user->rule, ['class' => 'form-control']); ?>
                 </div>
                 <div class="form-group">
                     <?= Form::label('newPassword', 'Новый пароль'); ?>

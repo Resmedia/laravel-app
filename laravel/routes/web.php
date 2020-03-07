@@ -20,7 +20,13 @@ Route::group(
     ], function () {
     Route::resource('/users', 'Admin\UserController');
     Route::get('/users/edit/{id}', 'Admin\UserController@edit');
+    Route::get('/users/delete/{id}', 'Admin\UserController@deleteItem');
+    Route::get('/users/create', 'Admin\UserController@create');
+    Route::delete('/users/delete-image', 'Admin\UserController@deleteImage');
+    Route::resource('/users/update', 'Admin\UserController')->only('update');
+
     Route::match(['post', 'get'], '/account', 'Admin\AccountController@update')->name('account');
+
     Route::get('/', 'Admin\IndexController@index');
     Route::resource('/news', 'Admin\NewsController');
     Route::resource('/news/store', 'Admin\NewsController');

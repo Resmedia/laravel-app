@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -86,10 +87,9 @@ class UserController extends Controller
         $user = User::find($id);
 
         $validator = Validator::make($request->all(), [
-            'title' => ($user->title !== $request->get('title')) ? 'required|unique:user|max:120' : 'required|max:120',
-            'slug' => ($user->slug !== $request->get('slug')) ? 'required|unique:user|max:120' : 'required|max:120',
-            'category_id' => 'required',
-            'content' => 'required',
+            'name' => ($user->title !== $request->get('name')) ? 'required|unique:users|max:100' : 'required|max:100',
+            'email' => ($user->slug !== $request->get('email')) ? 'required|unique:users|max:120' : 'required|max:100',
+            'rules' => 'required',
         ], $user->messages());
 
         if ($validator->fails()) {
@@ -99,12 +99,10 @@ class UserController extends Controller
         }
 
         $user->fill([
-            'author_id' => Auth::id(),
-            'title' => $request->get('title'),
-            'slug' => $request->get('slug'),
-            'category_id' => $request->get('category_id'),
-            'content' => $request->get('content'),
-            'updated_at' => date('Y-m-d H:i:s')
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'rules' => $request->get('rules'),
+            'password' => Hash::make($request->get('newPassword')),
         ]);
         if($user->save()){
             if($request->hasFile('file')) {
