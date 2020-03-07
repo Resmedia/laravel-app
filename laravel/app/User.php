@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -36,4 +36,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    /**
+     * Scope a query to search posts
+     */
+    public function scopeSearch(Builder $query, ?string $search)
+    {
+        if ($search) {
+            return $query->where('name', 'LIKE', "%{$search}%");
+        }
+    }
 }

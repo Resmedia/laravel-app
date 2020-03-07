@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\News;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\View\View;
 
 class AccountController extends Controller
 {
@@ -75,8 +71,8 @@ class AccountController extends Controller
         return [
             'name.required' => 'ФИО обязательно',
             'email.required'  => 'Email необходимо заполнить',
-            'oldPassword.required' => 'Страый пароль обязательно к заполнению',
-            'newPassword.required' => 'Новый пароль обязательно к заполнению',
+            'oldPassword.required' => 'Страый пароль обязателен к заполнению',
+            'newPassword.required' => 'Новый пароль обязателен к заполнению',
             'email.unique' => 'Email должен быть уникален',
             'title.unique' => 'Название должно быть уникально',
             'newPassword.min' => 'Пароь минимум 5 знаков',

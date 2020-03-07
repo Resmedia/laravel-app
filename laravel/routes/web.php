@@ -18,6 +18,8 @@ Route::group(
         'prefix' => 'admin',
         'as' => 'admin.'
     ], function () {
+    Route::resource('/users', 'Admin\UserController');
+    Route::get('/users/edit/{id}', 'Admin\UserController@edit');
     Route::match(['post', 'get'], '/account', 'Admin\AccountController@update')->name('account');
     Route::get('/', 'Admin\IndexController@index');
     Route::resource('/news', 'Admin\NewsController');
