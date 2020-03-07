@@ -46,6 +46,12 @@
                                 Панель управления
                             </a>
                             <a
+                                    class="dropdown-item"
+                                    href="/admin/account"
+                            >
+                                Изменить данные
+                            </a>
+                            <a
                                     id="logout"
                                     class="dropdown-item"
                                     href="{{ route('logout') }}"
