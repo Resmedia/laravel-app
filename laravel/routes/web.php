@@ -18,8 +18,9 @@ Route::group(
         'prefix' => 'admin',
         'as' => 'admin.'
     ], function () {
+    Route::match(['post', 'get'], '/account', 'Admin\AccountController@update')->name('account');
     Route::get('/', 'Admin\IndexController@index');
-    Route::resource('/news', 'Admin\NewsController')->only('index');
+    Route::resource('/news', 'Admin\NewsController');
     Route::resource('/news/store', 'Admin\NewsController');
     Route::resource('/news/update', 'Admin\NewsController')->only('update');
     Route::get('/news/delete/{id}', 'Admin\NewsController@deleteItem');
