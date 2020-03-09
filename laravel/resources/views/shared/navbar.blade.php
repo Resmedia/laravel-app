@@ -39,7 +39,7 @@
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            @if(Auth::user()->roles == App\User::USER_ADMIN)
+                            @if(Auth::user()->rules == App\User::USER_ADMIN)
                                 <a
                                         class="dropdown-item"
                                         href="/admin"
