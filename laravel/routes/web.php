@@ -12,7 +12,13 @@
 */
 
 Route::get('/', 'MainController@index');
+
 Auth::routes();
+Route::get('login/github', 'Auth\LoginController@redirectToProvider');
+Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
+
+Route::match(['post', 'get'], '/admin/account', 'Admin\AccountController@update')->name('account');
+
 Route::group(
     [
         'namespace' => 'Admin',
@@ -21,8 +27,6 @@ Route::group(
         'middleware' => ['auth', 'rules']
     ], function () {
     Route::get('/', 'IndexController@index');
-
-    Route::match(['post', 'get'], '/account', 'AccountController@update')->name('account');
 
     Route::get('/parser', 'ParserController@index')->name('parser');
 

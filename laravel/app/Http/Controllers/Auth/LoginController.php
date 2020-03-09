@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -35,5 +38,27 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function redirectToProvider()
+    {
+        session()->get('soc.token');
+        if(Auth::id()){
+            return redirect('/');
+        }
+        return Socialite::driver('github')->redirect();
+    }
+
+    public function handleProviderCallback(UserRepository $userRepository)
+    {
+        $user = Socialite::driver('github')->user();
+        //dump($user);
+        session(['soc.token' => $user->token]);
+        $socialUser = $userRepository->getUserBySocId($user, 'github');
+        if(!$socialUser) {
+            return redirect('/login')->with('error', 'Такой email есть уже в системе!');
+        }
+        Auth::login($socialUser);
+        return redirect('/')->with('success', 'Добро пожаловать ' . $user->getName() . ' пользователь GitLab');
     }
 }

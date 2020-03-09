@@ -50,10 +50,11 @@ class NewsController extends Controller
                 return redirect($news->getUrl(), 301);
             }
         } else {
-            $news = News::where('slug', '=', $url)->firstOrFail();
+            $news = News::where('slug', $url)->first();
         }
 
         $images = Storage::files("/news/$news->id") ?: null;
+
         return view('news.show', [
             'images' => $images,
             'news' => $news]
