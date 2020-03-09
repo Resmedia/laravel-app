@@ -24,6 +24,8 @@ Route::group(
 
     Route::match(['post', 'get'], '/account', 'AccountController@update')->name('account');
 
+    Route::get('/parser', 'ParserController@index')->name('parser');
+
     Route::resource('/users', 'UserController');
     Route::get('/users/{id}/delete', 'UserController@delete')->name('users.delete');
     Route::match(['post'], '/users/delete-image', 'UserController@deleteImage')->name('users.deleteImage');

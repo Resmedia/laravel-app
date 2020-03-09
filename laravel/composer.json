@@ -12,6 +12,7 @@
         "acfbentveld/xml": "^2.4",
         "davmixcool/laravel-meta-manager": "^1.2",
         "fideloper/proxy": "^4.0",
+        "jbroadway/urlify": "^1.2",
         "laravel/framework": "^6.2",
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.0",
