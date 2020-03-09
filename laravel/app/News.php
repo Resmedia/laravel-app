@@ -9,6 +9,11 @@ use Illuminate\Support\Str;
 
 /**
  * @property mixed content
+ * @property integer $author_id
+ * @property string $title
+ * @property string $content
+ * @property string $slug
+ * @property integer $category_id
  */
 class News extends Model
 {
@@ -22,9 +27,7 @@ class News extends Model
         'author_id',
         'title',
         'content',
-        'posted_at',
         'slug',
-        'thumbnail_id',
         'category_id',
     ];
 
@@ -52,6 +55,11 @@ class News extends Model
         }
 
         return 'slug';
+    }
+
+    public function getUrl()
+    {
+        return '/news/' . ($this->slug ?: $this->id);
     }
 
     /**
@@ -111,7 +119,7 @@ class News extends Model
     {
         return [
             'title.required' => 'Название обязательно',
-            'content.required'  => 'Контент необходимо заполнить',
+            'content.required' => 'Контент необходимо заполнить',
             'category_id.required' => 'Категорию необходимо выбрать',
             'slug.required' => 'URL обязательно к заполнению',
             'slug.unique' => 'URL должен быть уникален',

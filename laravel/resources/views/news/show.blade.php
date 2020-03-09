@@ -44,7 +44,7 @@
         <div class="mb-3">
             <small class="text-muted">{{  !empty($news->author) ? $news->author->name : ''}}</small>
             ,
-            <small class="text-muted">{{ App\Helpers\Helper::humanize_date($news->posted_at) }}</small>
+            <small class="text-muted">{{ App\Helpers\Helper::humanize_date($news->created_at) }}</small>
         </div>
 
         <div class="post-content">

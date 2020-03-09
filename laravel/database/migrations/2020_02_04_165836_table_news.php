@@ -19,7 +19,6 @@ class TableNews extends Migration
             $table->string('title');
             $table->string('slug')->nullable(true);
             $table->text('content');
-            $table->datetime('posted_at');
             $table->timestamps();
         });
     }

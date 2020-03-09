@@ -24,30 +24,9 @@ class NewsController extends Controller
 
     public function store(Request $request)
     {
-        $news = new News($request->all());
+        $news = new News();
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:news|max:255',
-            'slug' =>  'required|unique:news|max:255',
-            'category_id' => 'required',
-            'content' => 'required',
-        ], $news->messages());
-
-        if ($validator->fails()) {
-            return redirect('/admin/news/create')
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $news->fill(['author_id' => Auth::id()]);
-
-        if($news->save()){
-            if($request->hasFile('file')) {
-                $request->file('file')->store('news/' . $news->id);
-            }
-        };
-
-        return redirect('/admin/news')->with('success', 'Новость успешно сохранена');
+        return $this->saveData($request, $news);
     }
 
     public function create()
@@ -87,40 +66,51 @@ class NewsController extends Controller
     {
         $news = News::find($id);
 
-        $this->data($request, $news);
+        if(!empty($news)) {
+            return $this->saveData($request, $news);
+        }
 
-        return redirect('/admin/news')->with('success', 'Новость обновлена!');
+        return false;
     }
 
-    protected function data(Request $request, $news)
+    protected function saveData(Request $request, $news)
     {
+        $exists = $news->exists;
         /** @var $news News */
         $validator = Validator::make($request->all(), [
-            'title' => (isset($news->id) && $news->title != $request->get('title')) ? 'required|unique:news|max:120' : 'required|max:120',
-            'slug' => (isset($news->id) && $news->slug != $request->get('slug')) ? 'required|unique:news|max:120' : 'required|max:120',
+            'title' => ($exists && $news->title == $request->get('title')) ? 'required|max:120' : 'required|unique:news|max:120',
+            'slug' => ($exists && $news->slug == $request->get('slug')) ? 'required|max:120' : 'required|unique:news|max:120',
             'category_id' => 'required',
             'content' => 'required',
         ], $news->messages());
 
+        $url = '/admin/news' . ($exists ? '/' . $news->id . '/edit' : '/create');
+
         if ($validator->fails()) {
-            return redirect(isset($news->id) ? "/admin/news/$news->id/edit" : "/admin/news/create")
+            return redirect($url)
                 ->withErrors($validator)
                 ->withInput();
-        }
+        } else {
+            $news->fill([
+                'author_id' => Auth::id(),
+                'title' => $request->get('title'),
+                'slug' => $request->get('slug'),
+                'category_id' => $request->get('category_id'),
+                'content' => $request->get('content'),
+            ]);
 
-        $news->fill([
-            'author_id' => Auth::id(),
-            'title' => $request->get('title'),
-            'slug' => $request->get('slug'),
-            'category_id' => $request->get('category_id'),
-            'content' => $request->get('content'),
-        ]);
-        if($news->save()){
-            if($request->hasFile('file')) {
-                $request->file('file')->store('news/' . $news->id);
-            }
-        };
+            if($news->save()){
+                if($request->hasFile('file')) {
+                    $request->file('file')->store('news/' . $news->id);
+                }
+
+                return redirect('/admin/news')->with('success', 'Новость успешно ' . ($exists ? 'обновлена!' : 'сохранена!'));
+            };
+
+            return false;
+        }
     }
+
 
     public function deleteImage(Request $request)
     {
@@ -139,15 +129,15 @@ class NewsController extends Controller
         ]);
     }
 
-    public function delete($id = null)
+    public function delete($id)
     {
-        if($id) {
-            $news = News::find($id);
-            $news->delete();
+        $news = News::find($id);
 
+        if(!empty($news)) {
+            $news->delete();
             return redirect('/admin/news')->with('success', 'Новость удалена!');
         }
 
-        return redirect('/admin/news')->with('error', 'Нет ID!');
+        return redirect('/admin/news')->with('error', 'Нет такой новости!');
     }
 }

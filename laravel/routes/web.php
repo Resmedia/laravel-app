@@ -25,12 +25,12 @@ Route::group(
     Route::match(['post', 'get'], '/account', 'AccountController@update')->name('account');
 
     Route::resource('/users', 'UserController');
-    Route::get('/users/{id}/delete', 'UserController@delete');
-    Route::delete('/users/delete-image', 'UserController@deleteImage');
+    Route::get('/users/{id}/delete', 'UserController@delete')->name('users.delete');
+    Route::match(['post'], '/users/delete-image', 'UserController@deleteImage')->name('users.deleteImage');
 
     Route::resource('/news', 'NewsController');
-    Route::get('/news/{id}/delete', 'NewsController@delete');
-    Route::delete('/news/delete-image', 'NewsController@deleteImage');
+    Route::get('/news/{id}/delete', 'NewsController@delete')->name('news.delete');
+    Route::match(['post'], '/news/delete-image', 'NewsController@deleteImage')->name('news.deleteImage');
 });
 
 Route::group(
@@ -40,5 +40,5 @@ Route::group(
     ], function () {
     Route::resource('/', 'NewsController')->only('index');
     Route::get('/category/{id}', 'NewsController@index');
-    Route::get('/{id}', 'NewsController@show');
+    Route::get('/{url}', 'NewsController@show');
 });
