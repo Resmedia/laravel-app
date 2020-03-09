@@ -14,7 +14,6 @@ class NewsController extends Controller
     public function index(Request $request): View
     {
         $models = News::search($request->input('q'))
-            ->where(['author_id' => Auth::id()])
             ->latest()
             ->paginate(20);
 
@@ -40,12 +39,8 @@ class NewsController extends Controller
                 ->withInput();
         }
 
-        $news->fill([
-            'author_id' => Auth::id(),
-            'posted_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        $news->fill(['author_id' => Auth::id()]);
+
         if($news->save()){
             if($request->hasFile('file')) {
                 $request->file('file')->store('news/' . $news->id);
@@ -92,15 +87,23 @@ class NewsController extends Controller
     {
         $news = News::find($id);
 
+        $this->data($request, $news);
+
+        return redirect('/admin/news')->with('success', 'Новость обновлена!');
+    }
+
+    protected function data(Request $request, $news)
+    {
+        /** @var $news News */
         $validator = Validator::make($request->all(), [
-            'title' => ($news->title !== $request->get('title')) ? 'required|unique:news|max:120' : 'required|max:120',
-            'slug' => ($news->slug !== $request->get('slug')) ? 'required|unique:news|max:120' : 'required|max:120',
+            'title' => (isset($news->id) && $news->title != $request->get('title')) ? 'required|unique:news|max:120' : 'required|max:120',
+            'slug' => (isset($news->id) && $news->slug != $request->get('slug')) ? 'required|unique:news|max:120' : 'required|max:120',
             'category_id' => 'required',
             'content' => 'required',
         ], $news->messages());
 
         if ($validator->fails()) {
-            return redirect("/admin/news/edit/$id")
+            return redirect(isset($news->id) ? "/admin/news/$news->id/edit" : "/admin/news/create")
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -111,16 +114,12 @@ class NewsController extends Controller
             'slug' => $request->get('slug'),
             'category_id' => $request->get('category_id'),
             'content' => $request->get('content'),
-            'updated_at' => date('Y-m-d H:i:s')
         ]);
         if($news->save()){
             if($request->hasFile('file')) {
                 $request->file('file')->store('news/' . $news->id);
-                return redirect('admin/news/edit/' . $news->id)->with('success', 'Фото добавлено!');
             }
         };
-
-        return redirect('/admin/news')->with('success', 'Новость обновлена!');
     }
 
     public function deleteImage(Request $request)
@@ -140,7 +139,7 @@ class NewsController extends Controller
         ]);
     }
 
-    public function deleteItem($id = null)
+    public function delete($id = null)
     {
         if($id) {
             $news = News::find($id);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +16,7 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         $models = User::search($request->input('q'))
+            ->where('id', '<>', Auth::id())
             ->latest()
             ->paginate(20);
 
@@ -23,47 +25,17 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store()
     {
-        $user = new User($request->all());
+        $user = new User();
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:user|max:255',
-            'slug' =>  'required|unique:user|max:255',
-            'category_id' => 'required',
-            'content' => 'required',
-        ], $user->messages());
-
-        if ($validator->fails()) {
-            return redirect('/admin/users/create')
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $user->fill([
-            'author_id' => Auth::id(),
-            'posted_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-        if($user->save()){
-            if($request->hasFile('file')) {
-                $request->file('file')->store('users/' . $user->id);
-            }
-        };
-
-        return redirect('/admin/users')->with('success', 'Новость успешно сохранена');
+        return $this->saveData(request(), $user);
     }
 
     public function create()
     {
-        $rules = [
-            1 => 'Администратор',
-            2 => 'Пользователь'
-        ];
-
         return view('admin.users.create', [
-            'rules' => $rules
+            'rules' => User::$roles
         ]);
     }
 
@@ -71,53 +43,67 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        $rules = [
-            1 => 'Администратор',
-            2 => 'Пользователь'
-        ];
-
         return view('admin.users.edit', [
             'user' => $user,
-            'rules' => $rules
+            'rules' => User::$roles
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        $user = User::find($id);
+        $user = User::find(intval($id));
 
-        $validator = Validator::make($request->all(), [
-            'name' => ($user->title !== $request->get('name')) ? 'required|unique:users|max:100' : 'required|max:100',
-            'email' => ($user->slug !== $request->get('email')) ? 'required|unique:users|max:120' : 'required|max:100',
-            'rules' => 'required',
-        ], $user->messages());
-
-        if ($validator->fails()) {
-            return redirect("/admin/users/edit/$id")
-                ->withErrors($validator)
-                ->withInput();
+        if (!empty($user)) {
+            return $this->saveData(request(), $user);
         }
 
-        $user->fill([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'rules' => $request->get('rules'),
-            'password' => Hash::make($request->get('newPassword')),
-        ]);
-        if($user->save()){
-            if($request->hasFile('file')) {
-                $request->file('file')->store('user/' . $user->id);
-                return redirect('admin/users/edit/' . $user->id)->with('success', 'Фото добавлено!');
-            }
-        };
+        return false;
+    }
 
-        return redirect('/admin/users')->with('success', 'Пользователь обновлен!');
+    protected function saveData(Request $request, $user)
+    {
+        $rules = [
+            'name' => 'required|max:100|min:3',
+            'email' => 'required|max:100|min:3' . ($user->exists && $user->email == $request->post('email') ? '' : '|unique:users'),
+            'newPassword' => $user->exists && !$request->post('newPassword') ? '' : 'required|min:5',
+            'rules' => 'required'
+        ];
+        /** @var $user User */
+        $validator = Validator::make($request->all(), $rules, $user->messages());
+
+        $exists = $user->exists;
+        $url = '/admin/users' . ($exists ? '/' . $user->id . '/edit' : '/create');
+
+        if ($validator->fails()) {
+            return redirect($url)
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+
+            $user->fill([
+                'name' => $request->post('name'),
+                'email' => $request->post('email'),
+                'rules' => intval($request->post('rules')),
+                'password' => $request->post('newPassword') ? Hash::make($request->post('newPassword')) : $user->password,
+            ]);
+
+            if ($user->save()) {
+                if ($request->hasFile('file')) {
+                    $request->file('file')->store('users/' . $user->id);
+                }
+
+                return redirect('/admin/users')
+                    ->with('success', 'Пользователь успешно' . ($exists ? ' обновлен!' : ' сохранен!'));
+            };
+        }
+
+        return false;
     }
 
     public function deleteImage(Request $request)
     {
-        if($request->get('url')) {
-            if(Storage::delete($request->get('url'))){
+        if ($request->get('url')) {
+            if (Storage::delete($request->get('url'))) {
                 return json_encode([
                     'status' => 200,
                     'message' => 'Фото успешно удалено!'
@@ -131,9 +117,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function deleteItem($id = null)
+    public function delete($id = null)
     {
-        if($id) {
+        if ($id) {
             $user = User::find($id);
             $user->delete();
 

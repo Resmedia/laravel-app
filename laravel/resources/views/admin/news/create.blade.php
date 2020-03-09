@@ -23,7 +23,7 @@
                 </div>
                 <br />
             @endif
-            <form method="post" action="{{ url('/admin/news/store') }}" multiple>
+            <form method="post" action="{{ url('/admin/news') }}" multiple>
                 @method('POST')
                 @csrf
                 <input type="file" name="file">

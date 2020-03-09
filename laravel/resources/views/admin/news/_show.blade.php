@@ -15,14 +15,14 @@
     <td>
         <div class="btn-group-sm">
             <a
-                    href="{{ url("/admin/news/edit/{$news->id}") }}"
+                    href="{{ url("/admin/news/{$news->id}/edit") }}"
                     class="btn btn-light btn-group"
             >
 
                 Редактировать
             </a>
             <a
-                    href="{{ url("/admin/news/delete/{$news->id}") }}"
+                    href="{{ url("/admin/news/{$news->id}/delete") }}"
                     class="btn btn-danger btn-group"
             >
                 Удалить

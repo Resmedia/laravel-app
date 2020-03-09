@@ -13,38 +13,56 @@
     <div class="row">
         <div class="col-sm-8 offset-sm-2">
             <h1 class="display-5">Создание пользователя</h1>
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                <br />
-            @endif
-            <form method="post" action='{{ url("/admin/users/create") }}' enctype="multipart/form-data">
-                @method('PATCH')
+            <form method="post" action='{{ url("/admin/users") }}' enctype="multipart/form-data">
+                @method('POST')
                 @csrf
                 <?= Form::file('file') ?>
 
                 <div class="form-group">
                     <?= Form::label('name', 'ФИО'); ?>
                     <?= Form::text('name', '', ['class' => 'form-control']); ?>
+                        @if($errors->has('name'))
+                            @foreach ($errors->get('name') as $error)
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        @endif
                 </div>
 
                 <div class="form-group">
                     <?= Form::label('email', 'Email'); ?>
                     <?= Form::text('email', '', ['class' => 'form-control']) ?>
+                        @if($errors->has('email'))
+                            @foreach ($errors->get('email') as $error)
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        @endif
                 </div>
 
                 <div class="form-group">
                     <?= Form::label('rules', 'Права'); ?>
                     <?= Form::select('rules', $rules, '', ['class' => 'form-control']); ?>
+                        @if($errors->has('rules'))
+                            @foreach ($errors->get('rules') as $error)
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        @endif
                 </div>
                 <div class="form-group">
                     <?= Form::label('newPassword', 'Новый пароль'); ?>
                     <?= Form::text('newPassword', '', ['class' => 'form-control']); ?>
+                        @if($errors->has('newPassword'))
+                            @foreach ($errors->get('newPassword') as $error)
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        @endif
                 </div>
                 <?= Form::submit('Создать', ['class' => 'btn btn-success float-right']); ?>
             </form>

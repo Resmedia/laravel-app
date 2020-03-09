@@ -36,7 +36,7 @@
 
             <br/>
             <br/>
-            <form method="post" action='{{ url("/admin/news/update/$news->id") }}' enctype="multipart/form-data">
+            <form method="post" action='{{ url("/admin/news/$news->id") }}' enctype="multipart/form-data">
                 @method('PATCH')
                 @csrf
 
