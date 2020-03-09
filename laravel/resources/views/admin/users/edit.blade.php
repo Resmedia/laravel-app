@@ -85,7 +85,7 @@
 <script>
     deleteImage = url => {
         $.ajax({
-            method: 'DELETE',
+            method: 'POST',
             data: {
                 url: url,
                 "_token": "{{ csrf_token() }}"
