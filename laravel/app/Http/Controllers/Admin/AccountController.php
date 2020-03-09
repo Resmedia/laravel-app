@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,74 +12,54 @@ class AccountController extends Controller
 {
     public function update(Request $request)
     {
-        $model = Auth::user();
-
+        $user = Auth::user();
+        /** @var $user \App\User*/
         if ($request->isMethod('post')) {
 
-            $errors = Validator::make($request->all(), $this->validateRules(), $this->messages());
+            $rules = [
+                'name' => 'required|max:100',
+                'email' => 'required' . ($user->email == $request->post('email') ? '' : '|unique:users') . '|max:120',
+                'newPassword' =>
+                    !$request->post('oldPassword') &&
+                    !$request->post('newPassword') ?
+                        '' : 'min:5|required',
+                'oldPassword' =>
+                    !$request->post('oldPassword') &&
+                    !$request->post('newPassword') ?
+                        '' : 'min:5required',
+            ];
+
+            $errors = Validator::make($request->all(), $rules, $user->messages());
 
             if ($errors->fails()) {
                 return redirect('admin/account')
                     ->withErrors($errors)
                     ->withInput();
+            } else {
+                if (!empty($request->post('oldPassword')) &&
+                    !empty($request->post('newPassword')) &&
+                    !Hash::check($request->post('oldPassword'), $user->password)
+                ) {
+                    $error['oldPassword'][] = 'Неверно введен текущий пароль';
+                    return redirect('admin/account')
+                        ->withErrors($error)
+                        ->withInput();
+                } else {
+                    $user->fill([
+                        'name' => $request->post('name'),
+                        'password' => $request->post('newPassword') ? Hash::make($request->post('newPassword')) : $user->password,
+                        'email' => $request->post('email')
+                    ]);
+
+                    if($user->save()) {
+                        $request->session()->flash('success', 'Вы успешно сменили свои данные!');
+                    }
+                }
             }
-
-            if (Hash::check($request->post('oldPassword'), $model->password)) {
-                $errors['oldPassword'][] = 'Неверно введен текущий пароль';
-                return redirect('admin/account')
-                    ->withErrors($errors)
-                    ->withInput();
-            }
-
-            $model->fill([
-                'name' => $request->post('name'),
-                'password' => Hash::make($request->post('newPassword')),
-                'email' => $request->post('email')
-            ]);
-
-            $model->save();
-
-            $request->session()->flash('success', 'Вы успешно сменили свои данные!');
         }
 
         return view('admin.main.account', [
-            'model' => $model
+            'model' => $user
         ]);
     }
-
-    public function validateRules()
-    {
-        return [
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . Auth::id(),
-            'oldPassword' => 'required',
-            'newPassword' => 'required|min:5'
-        ];
-    }
-
-    public function attributeNames()
-    {
-        return [
-            'name' => 'ФИО',
-            'email' => 'Email',
-            'newPassword' => 'Новый пароль',
-            'oldPassword' => 'Старый пароль',
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'name.required' => 'ФИО обязательно',
-            'email.required'  => 'Email необходимо заполнить',
-            'oldPassword.required' => 'Страый пароль обязателен к заполнению',
-            'newPassword.required' => 'Новый пароль обязателен к заполнению',
-            'email.unique' => 'Email должен быть уникален',
-            'title.unique' => 'Название должно быть уникально',
-            'newPassword.min' => 'Пароь минимум 5 знаков',
-            'name.max' => 'ФИО не может быть более 100 знаков',
-            'name.string' => 'ФИО не может содержать цифры',
-        ];
-    }
-
 }

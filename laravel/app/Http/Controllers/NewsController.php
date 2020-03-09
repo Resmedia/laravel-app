@@ -42,12 +42,22 @@ class NewsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($url)
     {
-        $images = Storage::files("/news/$id") ?: null;
+        if(is_numeric($url)) {
+            $news = News::find($url);
+            if($news->slug) {
+                return redirect($news->getUrl(), 301);
+            }
+        } else {
+            $news = News::where('slug', $url)->first();
+        }
+
+        $images = Storage::files("/news/$news->id") ?: null;
+
         return view('news.show', [
             'images' => $images,
-            'news' => News::findOrFail($id)]
+            'news' => $news]
         );
     }
 }

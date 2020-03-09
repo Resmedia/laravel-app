@@ -7,11 +7,6 @@
             </li>
         </ol>
     </nav>
-    @if(session()->get('success'))
-        <div class="alert alert-success">
-            {{ session()->get('success') }}
-        </div>
-    @endif
     <div class="panel-title col-12">
         <a href="{{url('/admin/news/create')}}" class="btn float-right btn-success">Создать новость</a>
         <br/><br/>

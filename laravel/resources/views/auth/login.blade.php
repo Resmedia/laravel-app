@@ -15,6 +15,9 @@
                         <br>
                         Или пройдите <a href="/register">регистрацию</a>
                     </small>
+                    <br/>
+                    <br/>
+                    <a class="btn btn-sm btn-secondary" href="login/github">Войти через GitHub</a>
                 </div>
 
                 <div class="card-body">

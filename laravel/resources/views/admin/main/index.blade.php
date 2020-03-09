@@ -4,8 +4,15 @@
         <h1>
             Вы в административной панели
         </h1>
-        <a href="{{url('/admin/news')}}">Перейти к редактированию новостей</a>
-        <a href="{{url('/admin/users')}}">Перейти к редактированию пользователей</a>
+        <a class="btn btn-success" href="{{url('/admin/news')}}">Перейти к редактированию новостей</a>
+        <br/>
+        <br/>
+        <a class="btn btn-success" href="{{url('/admin/users')}}">Перейти к редактированию пользователей</a>
+        <br/>
+        <br/>
+        <a class="btn btn-success" href="{{url('/admin/parser')}}">Спарсить новости</a>
+        <br/>
+        <br/>
         @yield('content')
     </main>
 @endsection

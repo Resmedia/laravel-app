@@ -7,22 +7,21 @@
         {{ !empty($news->author) ? $news->author->name : '' }}
     </td>
     <td>
-        <a target="_blank" href="{{ url("/news/{$news->id}")}}">{{$news->title}}</a>
+        <a target="_blank" href="{{ url($news->getUrl()) }}">{{$news->title}}</a>
     </td>
     <td>
-        {{ App\Helpers\Helper::humanize_date($news->posted_at) }}
+        {{ App\Helpers\Helper::humanize_date($news->created_at) }}
     </td>
     <td>
         <div class="btn-group-sm">
             <a
-                    href="{{ url("/admin/news/edit/{$news->id}") }}"
+                    href="{{ url("/admin/news/{$news->id}/edit") }}"
                     class="btn btn-light btn-group"
             >
-
                 Редактировать
             </a>
             <a
-                    href="{{ url("/admin/news/delete/{$news->id}") }}"
+                    href="{{ url("/admin/news/{$news->id}/delete") }}"
                     class="btn btn-danger btn-group"
             >
                 Удалить
