@@ -13,6 +13,7 @@
         <a class="btn btn-success" href="{{url('/admin/parser')}}">Спарсить новости</a>
         <br/>
         <br/>
+        <a class="btn btn-success" href="{{url('/admin/resource')}}">RSS новостей</a>
         @yield('content')
     </main>
 @endsection

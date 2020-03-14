@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 /**
- * @property mixed content
  * @property integer $author_id
  * @property string $title
  * @property string $content
@@ -28,6 +27,7 @@ class News extends Model
         'title',
         'content',
         'slug',
+        'image',
         'category_id',
     ];
 
