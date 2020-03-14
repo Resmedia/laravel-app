@@ -95,6 +95,10 @@ npm install && npm run dev
 ### 8 for view images run in /laravel folder 
 ```bash
 sudo ln -s "$(pwd)/storage/app" public/uploads
+
+# for file manager run
+
+sudo ln -s  "$(pwd)/storage" "$(pwd)/public/storage" 
 ```
 
 ### 9 to make test

@@ -3,6 +3,9 @@
     @if (!empty(Storage::files("/news/$news->id")))
         <img alt="image" class="card-img-top" src="/uploads/<?= Storage::files("/news/$news->id")[0] ?>">
     @endif
+    @if ($news->image && empty(Storage::files("/news/$news->id")))
+        <img alt="image" class="card-img-top" src="<?= $news->image ?>">
+    @endif
     <div class="card-body">
         <h5 class="card-title">
             <a href="{{ url($news->getUrl())}}">{{$news->title}}</a>

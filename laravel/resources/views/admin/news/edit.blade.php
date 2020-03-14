@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+    <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item" aria-current="page">
@@ -45,7 +46,102 @@
 
                 <div class="form-group">
                     <?= Form::label('content', 'Текст новости'); ?>
-                    <?= Form::textarea('content', $news->content, ['class' => 'form-control', 'rows' => 6]) ?>
+                        <textarea id="content" name="content" class="form-control">
+                            {!! old('content', $news->content) !!}
+                        </textarea>
+                        <script>
+                            CKEDITOR.on('instanceReady', function (ev) {
+                                ev.editor.on('paste', function (evt) {
+                                    evt.data.dataValue = stripTags(evt.data.dataValue, // Clean all. Tag allowed list
+                                        '<i>' +
+                                        '<s>' +
+                                        '<em>' +
+                                        '<b>' +
+                                        '<p>' +
+                                        '<br>' +
+                                        '<hr>' +
+                                        '<ul>' +
+                                        '<li>' +
+                                        '<ol>' +
+                                        '<a>' +
+                                        '<td>' +
+                                        '<tr>' +
+                                        '<div>' +
+                                        '<table>' +
+                                        '<tbody>' +
+                                        '<thead>' +
+                                        '<strong>' +
+                                        '<blockquote>'
+                                    );
+                                    evt.data.dataValue = evt.data.dataValue.replace(/&nbsp;/g, ' '); // remove spaces &nbsp
+                                    evt.data.dataValue = evt.data.dataValue.replace(/<p><\/p>/g, '<br/>'); // Replace empty <p> to <br/>
+                                    evt.data.dataValue = evt.data.dataValue.replace(/style=*/g, ''); // Remove all styles
+                                    evt.data.dataValue = evt.data.dataValue.replace(/align=*/g, ''); // Remove all algins
+                                    evt.data.dataValue = evt.data.dataValue.replace(/height=*/g, ''); // Remove all height
+                                    evt.data.dataValue = evt.data.dataValue.replace(/width=*/g, ''); // Remove all width
+                                }, null, null, 9);
+                            });
+
+                            CKEDITOR.editorConfig = function (config) {
+                                config.allowedContent = true;
+                                config.disallowedContent = 'span';
+                                config.removeFormatTags = 'span;';
+                                config.uiColor = '#f2f2f2';
+                                config.scayt_autoStartup = false;
+                                config.format_tags = 'h3;h4;h5;pre';
+                                config.toolbarCanCollapse = true;
+
+                                config.toolbar = [
+                                    {name: 'tools', items: ['Source', 'Maximize', 'RemoveFormat', 'ShowBlocks', 'Find', '-', 'Undo', 'Redo']},
+                                    {
+                                        name: 'clipboard',
+                                        groups: ['clipboard', 'undo'],
+                                    },
+                                    {name: 'links', items: ['Link', 'Unlink', 'Anchor', '-', 'Image']},
+                                    {name: 'document', groups: ['mode', 'document', 'doctools']},
+                                    {name: 'insert', items: ['Table', 'HorizontalRule', 'SpecialChar', 'Iframe']},
+
+                                    {
+                                        name: 'basicstyles',
+                                        groups: ['basicstyles', 'cleanup'],
+                                        items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-']
+                                    },
+                                    {
+                                        name: 'paragraph',
+                                        groups: ['list', 'indent', 'blocks', 'align'],
+                                        items: [
+                                            'JustifyLeft', 'JustifyCenter',
+                                            'JustifyRight', 'JustifyBlock', '-',
+                                            'NumberedList',
+                                            'BulletedList', '-',
+                                            'Outdent', 'Indent', '-',
+                                            'Blockquote', 'CreateDiv', '-',
+                                        ]
+                                    },
+
+                                    {name: 'styles', items: ['Format', 'FontSize']},
+                                    {name: 'colors', items: ['TextColor', 'BGColor']},
+                                ];
+                            };
+
+                            let options = {
+                                filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+                                filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+                                filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+                                filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+                            };
+
+                            CKEDITOR.replace('content', options);
+
+                            function stripTags(input, allowed) {
+                                allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
+                                let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+                                let commentsAndPhpTags = /<![\s\S]*?>|<\?(?:php)?[\s\S]*?\?>/gi;
+                                return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+                                    return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+                                });
+                            }
+                        </script>
                         @if($errors->has('content'))
                             @foreach ($errors->get('content') as $error)
                                 <div class="alert alert-danger" role="alert">

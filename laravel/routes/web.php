@@ -30,6 +30,8 @@ Route::group(
 
     Route::get('/parser', 'ParserController@index')->name('parser');
 
+    Route::resource('/resource', 'ResourceController');
+
     Route::resource('/users', 'UserController');
     Route::get('/users/{id}/delete', 'UserController@delete')->name('users.delete');
     Route::match(['post'], '/users/delete-image', 'UserController@deleteImage')->name('users.deleteImage');
